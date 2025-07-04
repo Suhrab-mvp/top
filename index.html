@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UFC Рейтинг</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background-color: #121212;
+      color: #fff;
+    }
+
+    header {
+      text-align: center;
+      padding: 2rem 1rem;
+      background-color: #1f1f1f;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.7);
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      color: #e50914;
+      letter-spacing: 2px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      padding: 2rem 1rem;
+    }
+
+    .fighter {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #1e1e1e;
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+      transition: transform 0.2s;
+    }
+
+    .fighter:hover {
+      transform: scale(1.02);
+    }
+
+    .info {
+      display: flex;
+      align-items: center;
+      flex-grow: 1;
+    }
+
+    .fighter img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #e50914;
+      margin-right: 1rem;
+    }
+
+    .fighter img.belt {
+      border: none;
+      border-radius: 0;
+      width: 200px;
+      height: auto;
+      margin-left: 0.5rem;
+    }
+
+    .rank {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #888;
+      margin-right: 1rem;
+      min-width: 40px;
+      text-align: center;
+    }
+
+    .arrow {
+      margin-left: 0.3rem;
+      font-size: 1.2rem;
+    }
+
+    .up {
+      color: #00ff7f;
+    }
+
+    .down {
+      color: #ff4c4c;
+    }
+
+    .same {
+      color: #999;
+    }
+
+    .name {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .record-box {
+      text-align: center;
+      min-width: 100px;
+    }
+
+    .record-labels {
+      font-size: 0.9rem;
+      color: #aaa;
+      margin-bottom: 0.2rem;
+      display: flex;
+      justify-content: space-around;
+    }
+
+    .record-values {
+      display: flex;
+      justify-content: space-around;
+      gap: 1rem;
+    }
+
+    .wins {
+      color: #00ff7f;
+      font-weight: bold;
+      font-size: 1.6rem;
+    }
+
+    .losses {
+      color: #ff4c4c;
+      font-weight: bold;
+      font-size: 1.6rem;
+    }
+
+    @media (max-width: 600px) {
+      .fighter {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 1rem 0.5rem;
+      }
+
+      .info {
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 0.5rem;
+      }
+
+      .fighter img {
+        margin-right: 0;
+        margin-bottom: 0.5rem;
+        width: 70px;
+        height: 70px;
+      }
+
+      .rank {
+        margin-right: 0;
+        margin-bottom: 0.2rem;
+      }
+
+      .name {
+        font-size: 1.2rem;
+      }
+
+      .record-box {
+        margin-top: 0.5rem;
+      }
+
+      .record-labels {
+        font-size: 0.8rem;
+      }
+
+      .record-values {
+        gap: 0.8rem;
+      }
+
+      .wins, .losses {
+        font-size: 1.4rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>UFC Рейтинг Бойцов</h1>
+  </header>
+
+  <div class="container">
+    <div id="fighters">
+      <div class="fighter" data-wins="13" data-prev-rank="3">
+        <div class="info">
+          <img src="nyrtilek.jpg" alt="Nurtilek">
+          <div class="rank">#1 <span class="arrow"></span></div>
+          <div class="name">NURTILEK</div>
+        </div>
+        <div class="record-box">
+          <img class="belt" src="pois.png" alt="UFC Belt">
+          <div class="record-labels">
+            <span>Win</span>
+            <span>Lost</span>
+          </div>
+          <div class="record-values">
+            <span class="wins">13</span>
+            <span class="losses">0</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="fighter" data-wins="10" data-prev-rank="1">
+        <div class="info">
+          <img src="nurgazy.jpg" alt="Nurgazy">
+          <div class="rank">#2 <span class="arrow"></span></div>
+          <div class="name">NURGAZY</div>
+        </div>
+        <div class="record-box">
+          <div class="record-labels">
+            <span>Win</span>
+            <span>Lost</span>
+          </div>
+          <div class="record-values">
+            <span class="wins">10</span>
+            <span class="losses">10</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="fighter" data-wins="6" data-prev-rank="2">
+        <div class="info">
+          <img src="era.jpg" alt="Erlan">
+          <div class="rank">#3 <span class="arrow"></span></div>
+          <div class="name">ERLAN</div>
+        </div>
+        <div class="record-box">
+          <div class="record-labels">
+            <span>Win</span>
+            <span>Lost</span>
+          </div>
+          <div class="record-values">
+            <span class="wins">6</span>
+            <span class="losses">4</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="fighter" data-wins="5" data-prev-rank="4">
+        <div class="info">
+          <img src="kera.jpg" alt="Kersan">
+          <div class="rank">#4 <span class="arrow"></span></div>
+          <div class="name">KERSAN</div>
+        </div>
+        <div class="record-box">
+          <div class="record-labels">
+            <span>Win</span>
+            <span>Lost</span>
+          </div>
+          <div class="record-values">
+            <span class="wins">5</span>
+            <span class="losses">3</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="fighter" data-wins="4" data-prev-rank="6">
+        <div class="info">
+          <img src="bakyt.jpg" alt="Bakyt">
+          <div class="rank">#5 <span class="arrow"></span></div>
+          <div class="name">BAKYT</div>
+        </div>
+        <div class="record-box">
+          <div class="record-labels">
+            <span>Win</span>
+            <span>Lost</span>
+          </div>
+          <div class="record-values">
+            <span class="wins">4</span>
+            <span class="losses">11</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="fighter" data-wins="1" data-prev-rank="5">
+        <div class="info">
+          <img src="azim.jpg" alt="Azimbek">
+          <div class="rank">#6 <span class="arrow"></span></div>
+          <div class="name">AZIMBEK</div>
+        </div>
+        <div class="record-box">
+          <div class="record-labels">
+            <span>Win</span>
+            <span>Lost</span>
+          </div>
+          <div class="record-values">
+            <span class="wins">1</span>
+            <span class="losses">11</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="fighter" data-wins="0" data-prev-rank="7">
+        <div class="info">
+          <img src="suhrab.jpg" alt="Suhrab">
+          <div class="rank">#7 <span class="arrow"></span></div>
+          <div class="name">SUHRAB</div>
+        </div>
+        <div class="record-box">
+          <div class="record-labels">
+            <span>Win</span>
+            <span>Lost</span>
+          </div>
+          <div class="record-values">
+            <span class="wins">0</span>
+            <span class="losses">2</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Отображение стрелок
+    document.querySelectorAll(".fighter").forEach((fighter, index) => {
+      const currentRank = index + 1;
+      const prevRank = parseInt(fighter.dataset.prevRank);
+      const rankEl = fighter.querySelector(".rank");
+      const arrowEl = rankEl.querySelector(".arrow");
+
+      if (prevRank > currentRank) {
+        arrowEl.textContent = "▲";
+        arrowEl.classList.add("up");
+      } else if (prevRank < currentRank) {
+        arrowEl.textContent = "▼";
+        arrowEl.classList.add("down");
+      } else {
+        arrowEl.textContent = "●";
+        arrowEl.classList.add("same");
+      }
+    });
+  </script>
+</body>
+</html>
+
+
