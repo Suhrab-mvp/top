@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UFC Рейтинг - Полулёгкий вес</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background-color: #121212;
+      color: #fff;
+    }
+
+    header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1rem;
+      background-color: #1f1f1f;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.7);
+    }
+
+    header h1 {
+      font-size: 2rem;
+      color: #e50914;
+      margin-bottom: 0.5rem;
+    }
+
+    #weight-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      width: 100%;
+      max-width: 600px;
+    }
+
+    #weight-buttons a {
+      padding: 0.5rem 1rem;
+      background-color: #333;
+      color: white;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background-color 0.2s;
+    }
+
+    #weight-buttons a:hover {
+      background-color: #e50914;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      padding: 1rem;
+    }
+
+    .fighter {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #1e1e1e;
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+      flex-wrap: wrap;
+    }
+
+    .info {
+      display: flex;
+      align-items: center;
+      flex-grow: 1;
+      flex-wrap: wrap;
+    }
+
+    .fighter img {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #e50914;
+      margin-right: 1rem;
+      flex-shrink: 0;
+    }
+
+    .rank {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #888;
+      margin-right: 1rem;
+      min-width: 40px;
+      display: flex;
+      align-items: center;
+    }
+
+    .name {
+      font-size: 1.3rem;
+      font-weight: bold;
+    }
+
+    .record-box {
+      text-align: center;
+      min-width: 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .record-labels {
+      font-size: 0.9rem;
+      color: #aaa;
+      margin-bottom: 0.2rem;
+      display: flex;
+      justify-content: space-around;
+      width: 100%;
+      max-width: 120px;
+    }
+
+    .record-values {
+      display: flex;
+      justify-content: space-around;
+      gap: 1rem;
+      width: 100%;
+      max-width: 120px;
+    }
+
+    .wins, .losses {
+      font-weight: bold;
+      font-size: 1.4rem;
+    }
+
+    .wins { color: #00ff7f; }
+    .losses { color: #ff4c4c; }
+
+    .progress-bar {
+      display: flex;
+      height: 10px;
+      width: 100%;
+      max-width: 120px;
+      border-radius: 5px;
+      overflow: hidden;
+      margin-top: 0.4rem;
+      background-color: #333;
+    }
+
+    .progress-win {
+      background-color: #00ff7f;
+      height: 100%;
+    }
+
+    .progress-loss {
+      background-color: #ff4c4c;
+      height: 100%;
+    }
+
+    .percent-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: #ccc;
+      width: 100%;
+      max-width: 120px;
+      margin-top: 0.2rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Полулёгкий вес</h1>
+    <div id="weight-buttons">
+      <a href="index.html">Все веса</a>
+      <a href="lightweight.html">Лёгкий вес</a>
+      <a href="featherweight.html">Полулёгкий вес</a>
+      <a href="middleweight.html">Средний вес</a>
+    </div>
+  </header>
+
+  <div class="container" id="fighters">
+    <!-- Бойцы загрузятся из Firebase -->
+  </div>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBPbOj6GXk0sqHuqlW4F9Rvk_Z2DbaNFIw",
+      authDomain: "ufc-rating.firebaseapp.com",
+      projectId: "ufc-rating",
+      storageBucket: "ufc-rating.appspot.com",
+      messagingSenderId: "837723032679",
+      appId: "1:837723032679:web:59e508e8203695f2b4d8c2"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    async function loadFighters() {
+      const querySnapshot = await getDocs(collection(db, "featherweight"));
+      const fighters = [];
+
+      querySnapshot.forEach((doc) => {
+        const fighter = doc.data();
+        fighters.push(fighter);
+      });
+
+      fighters.sort((a, b) => {
+        const aRatio = a.wins / (a.wins + a.losses);
+        const bRatio = b.wins / (b.wins + b.losses);
+        return bRatio - aRatio;
+      });
+
+      const container = document.getElementById("fighters");
+      fighters.forEach((fighter, index) => {
+        const winPercent = ((fighter.wins / (fighter.wins + fighter.losses)) * 100).toFixed(1);
+        const lossPercent = (100 - winPercent).toFixed(1);
+
+        container.insertAdjacentHTML("beforeend", `
+          <div class="fighter">
+            <div class="info">
+              <img src="${fighter.photo}" alt="${fighter.name}" />
+              <div class="rank">#${index + 1}</div>
+              <div class="name">${fighter.name}</div>
+            </div>
+            <div class="record-box">
+              <div class="record-labels"><span>Win</span><span>Lost</span></div>
+              <div class="record-values">
+                <span class="wins">${fighter.wins}</span>
+                <span class="losses">${fighter.losses}</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-win" style="width: ${winPercent}%"></div>
+                <div class="progress-loss" style="width: ${lossPercent}%"></div>
+              </div>
+              <div class="percent-labels">
+                <span>${winPercent}%</span>
+                <span>${lossPercent}%</span>
+              </div>
+            </div>
+          </div>
+        `);
+      });
+    }
+
+    loadFighters();
+  </script>
+</body>
+</html>
+
+
